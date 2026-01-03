@@ -149,7 +149,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# Adiciona prefixo se FORCE_SCRIPT_NAME estiver definido
+SCRIPT_NAME = os.environ.get('FORCE_SCRIPT_NAME', '')
+STATIC_URL = f'{SCRIPT_NAME}/static/' if SCRIPT_NAME else 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'frontend']
 
