@@ -41,6 +41,7 @@ Thumbs.db
 
 # Secrets (não commitar)
 .env
+.env.local
 secrets.json
 config/secrets.py
 
