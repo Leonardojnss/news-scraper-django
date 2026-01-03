@@ -1,5 +1,5 @@
 // Configuração da API
-const API_URL = 'http://localhost:8000/api/noticias/';
+const API_URL = '/news-scraper/api/noticias/';
 
 // Função para carregar notícias da API
 async function carregarNoticias() {
