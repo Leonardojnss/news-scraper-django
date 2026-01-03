@@ -647,13 +647,23 @@ nano .env
 # Adicionar (pressione Ctrl+X, Y, Enter para salvar):
 DEBUG=False
 SECRET_KEY=$(python -c 'from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())')
-ALLOWED_HOSTS=seu-dominio.com,www.seu-dominio.com,seu-ec2-ip
+ALLOWED_HOSTS=seu-dominio.com,www.seu-dominio.com,seu-ec2-ip,localhost,127.0.0.1
+FORCE_SCRIPT_NAME=/news-scraper
 DB_NAME=news_scraper_db
 DB_USER=news_user
 DB_PASSWORD=senha_segura_aqui
 DB_HOST=localhost
 DB_PORT=5432
 USE_SQLITE=False
+```
+
+**⚠️ IMPORTANTE**: Ajustar permissões do diretório home para o Nginx acessar arquivos estáticos:
+
+```bash
+chmod 755 /home/ubuntu
+chmod 755 /home/ubuntu/apps
+chmod 755 /home/ubuntu/apps/news-scraper
+chmod -R 755 ~/apps/news-scraper/staticfiles/
 ```
 
 #### 7. Preparar Django
@@ -693,6 +703,7 @@ User=ubuntu
 Group=www-data
 WorkingDirectory=/home/ubuntu/apps/news-scraper
 Environment="PATH=/home/ubuntu/apps/news-scraper/venv/bin"
+EnvironmentFile=/home/ubuntu/apps/news-scraper/.env
 ExecStart=/home/ubuntu/apps/news-scraper/venv/bin/gunicorn \
           --config gunicorn_config.py \
           config.wsgi:application
@@ -720,17 +731,17 @@ Adicione:
 
 ```nginx
 server {
-    listen 80;
+    listen 80 default_server;
     server_name seu-dominio.com www.seu-dominio.com seu-ec2-ip;
 
     location = /favicon.ico { access_log off; log_not_found off; }
     
-    location /static/ {
+    location /news-scraper/static/ {
         alias /home/ubuntu/apps/news-scraper/staticfiles/;
     }
 
-    location / {
-        proxy_pass http://127.0.0.1:8000;
+    location /news-scraper/ {
+        proxy_pass http://127.0.0.1:8001/;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
