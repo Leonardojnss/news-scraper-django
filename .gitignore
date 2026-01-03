@@ -1,0 +1,56 @@
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv
+
+# Arquivos Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Django
+db.sqlite3
+db.sqlite3-journal
+*.log
+*.pot
+*.pyc
+migrations/__pycache__/
+staticfiles/
+media/
+
+# Resultados do scraping
+resultados/
+*.csv
+*.json
+!example.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.vscode/settings.json
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.db
+
+# Secrets (não commitar)
+.env
+secrets.json
+config/secrets.py
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
+# Testing
+.pytest_cache/
+.tox/

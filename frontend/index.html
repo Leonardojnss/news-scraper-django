@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Scraper API - Django REST Framework</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📰 News Scraper API</h1>
+            <p>Django REST Framework + Frontend JavaScript</p>
+        </header>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="carregarNoticias()">
+                🔄 Recarregar Notícias
+            </button>
+            <button class="btn btn-danger" onclick="limparTodasNoticias()">
+                🗑️ Limpar Banco
+            </button>
+            <button class="btn btn-info" onclick="verEstatisticas()">
+                📊 Estatísticas
+            </button>
+            <a href="http://localhost:8000/api/noticias/" target="_blank" class="btn btn-success">
+                🌐 Ver API
+            </a>
+            <span id="totalNoticias" class="total-badge"></span>
+        </div>
+
+        <div id="statsContainer" class="stats-container" style="display: none;"></div>
+
+        <div id="newsContainer">
+            <div class="loading">Carregando notícias da API...</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
