@@ -1,0 +1,71 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            echo "🚀 Iniciando deploy..."
+            
+            # Navegar para o diretório do projeto
+            cd ~/apps/news-scraper-django
+            
+            # Fazer backup do .env
+            cp .env .env.backup
+            
+            # Pull das últimas mudanças
+            echo "📥 Baixando código do GitHub..."
+            git pull origin main
+            
+            # Restaurar .env
+            mv .env.backup .env
+            
+            # Ativar ambiente virtual e atualizar dependências
+            echo "📦 Instalando dependências..."
+            source venv/bin/activate
+            pip install -r requirements.txt --quiet
+            
+            # Executar migrações
+            echo "🗄️ Executando migrações..."
+            python manage.py migrate --noinput
+            
+            # Coletar arquivos estáticos
+            echo "📁 Coletando arquivos estáticos..."
+            python manage.py collectstatic --noinput
+            
+            # Reiniciar serviço
+            echo "🔄 Reiniciando serviço..."
+            sudo systemctl restart news-scraper
+            
+            # Verificar status
+            echo "✅ Verificando status do serviço..."
+            sudo systemctl status news-scraper --no-pager
+            
+            echo "🎉 Deploy concluído com sucesso!"
+
+      - name: Notify success
+        if: success()
+        run: echo "✅ Deploy realizado com sucesso!"
+
+      - name: Notify failure
+        if: failure()
+        run: echo "❌ Falha no deploy. Verifique os logs."
