@@ -28,7 +28,7 @@ services:
       - .:/app
       - static_volume:/app/staticfiles
     ports:
-      - "8000:8000"
+      - "8001:8001"  # Porta 8001 para não conflitar
     environment:
       - DEBUG=True
       - SECRET_KEY=django-insecure-docker-dev-key-change-in-production

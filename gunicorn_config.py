@@ -5,7 +5,7 @@ Gunicorn configuration file for production deployment.
 import multiprocessing
 
 # Server socket
-bind = "0.0.0.0:8000"
+bind = "0.0.0.0:8001"  # Porta 8001 para não conflitar com outro projeto
 backlog = 2048
 
 # Worker processes
